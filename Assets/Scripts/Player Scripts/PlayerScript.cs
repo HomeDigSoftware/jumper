@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour {
 
@@ -10,12 +11,14 @@ public class PlayerScript : MonoBehaviour {
 
     public float normal_Push = 10f;
     public float extra_Push = 14f;
-
+    public TMP_Text points_Text;
     private bool initial_Push;
 
     private int push_Count;
 
     private bool player_Died;
+    [SerializeField]
+    private int points = 0;
 
     void Awake() {
         myBody = GetComponent<Rigidbody2D>();
@@ -63,7 +66,9 @@ public class PlayerScript : MonoBehaviour {
                 // exit from the on trigger enter because of initial push
                 return;
             } // initial push
-
+            points += 30;
+            points_Text.text = points.ToString();
+            Debug.Log(" got pointss  ++  " + points);
             // outside of the initial push
 
         } // because of the initial push
@@ -77,7 +82,9 @@ public class PlayerScript : MonoBehaviour {
             push_Count++;
 
             SoundManager.instance.JumpSoundFX();
-
+            points += 10;
+            points_Text.text = points.ToString();
+            Debug.Log(" got pointss  ++  " + points);
         }
 
         if (target.tag == "ExtraPush") {
