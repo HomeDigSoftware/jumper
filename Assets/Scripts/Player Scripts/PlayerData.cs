@@ -11,4 +11,5 @@ public struct PlayerData
     public float yPos;
     public float zPos;
     public double timestamp;
+    public int score;
 }

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class PlayerScript : MonoBehaviour {
 
+    public static Action<string , int> player_Score; 
     private Rigidbody2D myBody;
 
     public float move_Speed = 2f;
@@ -13,7 +15,7 @@ public class PlayerScript : MonoBehaviour {
     public float extra_Push = 14f;
     public TMP_Text points_Text;
     private bool initial_Push;
-
+   // private int best_Score;
     private int push_Count;
 
     private bool player_Died;
@@ -48,7 +50,7 @@ public class PlayerScript : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D target) {
 
-        if (player_Died)
+        if (player_Died)                    
             return;
 
         if (target.tag == "ExtraPush") { 
@@ -85,6 +87,7 @@ public class PlayerScript : MonoBehaviour {
             points += 10;
             points_Text.text = points.ToString();
             Debug.Log(" got pointss  ++  " + points);
+            player_Score?.Invoke("new_score", points);
         }
 
         if (target.tag == "ExtraPush") {

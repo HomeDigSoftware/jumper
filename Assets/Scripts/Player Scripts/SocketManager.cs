@@ -4,25 +4,49 @@ using UnityEngine;
 using WebSocketSharp;
 using Newtonsoft.Json.Linq;
 using UnityEngine.Networking;
+using System;
 
 public class SocketManager : MonoBehaviour
 {
     WebSocket socket;
     public GameObject player;
     public PlayerData playerData;
+    public int the_Score;  
+    public string scoreee;
 
     //Package URL for Newtonsoft JSON utilities
     string PackageURL = "https://github.com/jilleJr/Newtonsoft.Json-for-Unity.git#upm";
+
+    private void OnEnable()
+    {
+        PlayerScript.player_Score += send_The_Score;
+    }
+
+    
+
+    private void OnDisable()
+    {
+        PlayerScript.player_Score -= send_The_Score;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
 
-       // socket = new WebSocket("ws://localhost:8080");
-        socket = new WebSocket("ws://https://66d6-2a0d-6fc2-56c0-3300-c4d0-7df8-59db-1005.eu.ngrok.io/");
+        // socket = new WebSocket("ws://localhost:8080");
+       // StartCoroutine(APP_Get_Locations());
+       //  socket = new WebSocket("ws://127.0.0.1:4040");
+        socket = new WebSocket("ws://3.83.188.239:443");
         socket.Connect();
-        StartCoroutine(APP_Get_Locations());
-                    //WebSocket onMessage function
+
+
+        socket.OnOpen += (sender, e) =>
+        {
+            Debug.Log(" connection establish");
+        };
+
+
+        //WebSocket onMessage function
         socket.OnMessage += (sender, e) =>
         {
 
@@ -45,6 +69,7 @@ public class SocketManager : MonoBehaviour
 
             }
 
+
         };
 
         //If server connection closes (not client originated)
@@ -52,12 +77,26 @@ public class SocketManager : MonoBehaviour
         {
             Debug.Log(e.Code);
             Debug.Log(e.Reason);
+           
             Debug.Log("Connection Closed!");
         };
+        Debug.Log(" run the start function :)");
     }
+
+    public void send_The_Score(string key, int _score)
+    {
+        if(key == "new_score")
+        {
+            the_Score = _score;
+            scoreee = _score.ToString();
+        }
+       
+    }
+
     IEnumerator APP_Get_Locations()
     {
-        using (UnityWebRequest www = UnityWebRequest.Get("https://66d6-2a0d-6fc2-56c0-3300-c4d0-7df8-59db-1005.eu.ngrok.io" + "/"))
+        
+        using (UnityWebRequest www = UnityWebRequest.Get("https://8c40-2a0d-6fc2-56c0-3300-c4d0-7df8-59db-1005.eu.ngrok.io" + "/" ))
         {
             Debug.Log("Form upload complete!");
             yield return www.SendWebRequest();
@@ -70,6 +109,14 @@ public class SocketManager : MonoBehaviour
             {
                 Debug.Log("Form upload complete!");
             }
+        }
+
+        WWWForm _form = new WWWForm();
+        _form.AddField("myField", scoreee);
+        using (UnityWebRequest www = UnityWebRequest.Post("https://8c40-2a0d-6fc2-56c0-3300-c4d0-7df8-59db-1005.eu.ngrok.io/", _form))
+        {
+            Debug.Log("Form the POST !!!!  " + scoreee);
+            yield return www.SendWebRequest();         
         }
     }
     // Update is called once per frame
@@ -88,7 +135,7 @@ public class SocketManager : MonoBehaviour
             playerData.xPos = player.transform.position.x;
             playerData.yPos = player.transform.position.y;
             playerData.zPos = player.transform.position.z;
-
+            playerData.score = the_Score;
             System.DateTime epochStart = new System.DateTime(1970, 1, 1, 8, 0, 0, System.DateTimeKind.Utc);
             double timestamp = (System.DateTime.UtcNow - epochStart).TotalSeconds;
             //Debug.Log(timestamp);
@@ -100,8 +147,9 @@ public class SocketManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-            string messageJSON = "{\"message\": \"Some Message From Client\"}";
-            socket.Send(messageJSON);
+            StartCoroutine(APP_Get_Locations());
+          //  string messageJSON = "{\"message\": \"Some Message From Client\"}";
+         //   socket.Send(messageJSON);
         }
     }
 
