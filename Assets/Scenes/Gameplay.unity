@@ -1372,6 +1372,9 @@ MonoBehaviour:
     yPos: 0
     zPos: 0
     timestamp: 0
+    score: 0
+  the_Score: 0
+  scoreee: 
 --- !u!4 &857857488
 Transform:
   m_ObjectHideFlags: 0
@@ -1606,6 +1609,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a94c722d1a007497392cf031b3c808db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _camera: {fileID: 519420028}
+  _player: {fileID: 1249856035}
 --- !u!4 &1162220606
 Transform:
   m_ObjectHideFlags: 0

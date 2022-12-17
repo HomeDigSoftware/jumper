@@ -6,7 +6,8 @@ using System;
 
 public class PlayerScript : MonoBehaviour {
 
-    public static Action<string , int> player_Score; 
+    public static Action<string , int> player_Score;
+    public static Action<string> player_fall;
     private Rigidbody2D myBody;
 
     public float move_Speed = 2f;
@@ -116,6 +117,7 @@ public class PlayerScript : MonoBehaviour {
             SoundManager.instance.GameOverSoundFX();
 
             GameManager.instance.RestartGame();
+          //  player_fall?.Invoke("fall_Down");
         }
 
     } // on trigger enter

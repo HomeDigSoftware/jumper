@@ -36,7 +36,7 @@ public class SocketManager : MonoBehaviour
         // socket = new WebSocket("ws://localhost:8080");
        // StartCoroutine(APP_Get_Locations());
        //  socket = new WebSocket("ws://127.0.0.1:4040");
-        socket = new WebSocket("ws://3.83.188.239:443");
+        socket = new WebSocket("ws://3.237.18.47:443");
         socket.Connect();
 
 
